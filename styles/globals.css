@@ -335,6 +335,7 @@ body {
   margin: 0;
   min-width:340px;
   min-height:100%;
+  background-color: #262626;
 }
 
 .search-bar input {

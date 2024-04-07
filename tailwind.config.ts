@@ -31,11 +31,6 @@ module.exports = {
       mmsm: { max: "1030px" },
       mmsst: { max: "830px" },
     },
-    extend: {
-      backgroundImage: {
-        heroimg: "url('../public/images/heroimg.svg')",
-      },
-    },
   },
   plugins: [],
 };
