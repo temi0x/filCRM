@@ -335,7 +335,7 @@ body {
   margin: 0;
   min-width:340px;
   min-height:100%;
-  background-color: #262626;
+  background-color: #fcfcfc;
 }
 
 .search-bar input {
@@ -576,7 +576,7 @@ body::-webkit-scrollbar-track,
 }
 
 .owner .chat-msg-text {
-  background-color: #5e43ec;
+  background-color: #ff5555;
   color: #fff;
   border-radius: 16px;
 }
@@ -590,7 +590,7 @@ body::-webkit-scrollbar-track,
 }
 
 .logo {
-  color: #5e43ec;
+  color: #ff5555;
   flex-shrink: 0;
 }
 
@@ -602,6 +602,7 @@ body::-webkit-scrollbar-track,
   display: flex;
   align-items: center;
   cursor: pointer;
+  color: #e2e2e2;
   margin-left: auto;
   flex-shrink: 0;
 }
@@ -630,10 +631,9 @@ body::-webkit-scrollbar-track,
 }
 
 .settings {
-  color: #c1c7cd;
-  width: 22px;
-  height: 22px;
-  flex-shrink: 0;
+  min-width: fit-content;
+  font-family: 'Poppins', sans-serif;
+  font-weight: bold;
 }
 
 .conversation-area {
@@ -723,7 +723,7 @@ body::-webkit-scrollbar-thumb,
 
 .msg.active {
   background: linear-gradient(to right, rgba(238, 242, 244, 0.4) 0%, rgba(238, 242, 244, 0) 100%);
-  border-left: 4px solid #5e43ec;
+  border-left: 4px solid #ff5555;
 }
 
 .msg-username {
@@ -855,7 +855,7 @@ body .EmojiPickerReact{
 }
 
 .view-more {
-  color: #5e43ec;
+  color: #ff5555;
   font-weight: 600;
   font-size: 15px;
   margin: 25px 0;
@@ -891,7 +891,7 @@ body .EmojiPickerReact{
 }
 
 .blue {
-  background-color: #5e43ec;
+  background-color: #ff5555;
 }
 
 img {
@@ -901,7 +901,7 @@ img {
 .app {
   display: flex;
   flex-direction: column;
-  background-color: #fff;
+  background-color: #fcfcfc;
   max-width: 1600px;
   height: 100vh;
   margin: 0 auto;
@@ -911,7 +911,9 @@ img {
 .header {
   height: 80px;
   width: 100%;
-  border-bottom: 1px solid #eef2f4;
+  background-color:#fff;
+  color: #e2e2e2;
+  box-shadow: 0px 2px 0 #3a3a3a1a;
   display: flex;
   align-items: center;
   padding: 0 20px;
@@ -926,7 +928,7 @@ img {
 
 .conversation-area,
 .detail-area {
-  width: 340px;
+  width: 320px;
   flex-shrink: 0;
 }
 

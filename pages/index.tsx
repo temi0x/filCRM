@@ -21,7 +21,7 @@ export default function Home() {
    useEffect(() => {
      if (!account.isConnected) openConnectModal?.();
      else router.push("/dashboard");
-   }, [openConnectModal, account.isConnected, signMessage, router]);
+   }, [openConnectModal, account.isConnected, router]);
 
   //  useEffect(() => {
   //    if (account.isConnected && open) {
