@@ -49,6 +49,7 @@ import stc from "string-to-color";
 let socket:any;
 
 const Storage = ({ loading: loadingModal }: { loading: boolean }) => {
+
   const [currentDir, setCurrentDir] = useState<string[]>(["main"]);
 
   const loadOnce = useRef<boolean>(true);
@@ -186,7 +187,7 @@ const Storage = ({ loading: loadingModal }: { loading: boolean }) => {
 
   let newLeads: any = {};
 
-  lead.map((aLead) => {
+  lead.forEach((aLead) => {
     if (newLeads[aLead.leadsource]) {
       newLeads[aLead.leadsource] += 1;
     } else {
@@ -194,13 +195,10 @@ const Storage = ({ loading: loadingModal }: { loading: boolean }) => {
     }
   });
 
-  let newleads: any[] = [];
-  Object.keys(newLeads).map((eachLead) => {
-    newleads.push({
+  let newleads: any[] = Object.keys(newLeads).map((eachLead) => ({
       name: eachLead,
       value: (newLeads[eachLead] / lead.length) * 100,
-    });
-  }); 
+    })); 
 
   const updatedNewLeads = newleads.map((item, index) => {
     const newcolor = colors[index];
@@ -250,34 +248,43 @@ const Storage = ({ loading: loadingModal }: { loading: boolean }) => {
 
             <div className="grid w-full grid-cols-2 gap-6">
               <div className=" p-3  border bg-white rounded-lg border-solid border-#CBCBCB-500">
-                <p className="mb-4 font-aeonikmedium"> Lead source</p>
+                <p className="mb-4"> Lead source</p>
                 <div
                   className=" flex gap-5 items-center focus:outline-none"
                   tabIndex={-1}
                 >
                   <div className="">
                     <PieChart width={200} height={200}>
-                      <Pie data={newleads} dataKey="value" outerRadius={100}>
-                        {newleads.map((entry, index) => (
-                          <Cell
-                            style={{
-                              outline: "none",
-                            }}
-                            key={`cell-${index}`}
-                            fill={
-                              entry.value > 0
-                                ? colors[index % colors.length]
-                                : "yellow"
-                            }
-                          />
-                        ))}
+                      <Pie
+                        data={newleads.length ? newleads : [{ name: "No leads", value: 100 }]}
+                        dataKey="value"
+                        outerRadius={100}
+                      >
+                        {(newleads.length ? newleads : [{ name: "No Leads", value: 100 }]).map(
+                          (entry, index) => (
+                            <Cell
+                              style={{
+                                outline: "none",
+                              }}
+                              key={`cell-${index}`}
+                              fill={
+                                entry.value > 0
+                                  ? colors[index % colors.length]
+                                  : "yellow"
+                              }
+                            />
+                          )
+                        )}
                       </Pie>
                     </PieChart>
                   </div>
                   <div className=" flex flex-col gap-3 pt-4">
-                    {updatedNewLeads.map((item, ii) => {
+                    {(updatedNewLeads.length ? updatedNewLeads : [{ name: "No Leads", value: 100 }]).map((item, ii) => {
                       return (
-                        <div key={ii} className="flex flex-row gap-4 items-center	">
+                        <div
+                          key={ii}
+                          className="flex flex-row gap-4 items-center	"
+                        >
                           <div
                             className={`w-2 h-2 rounded-full`}
                             style={{
@@ -286,7 +293,7 @@ const Storage = ({ loading: loadingModal }: { loading: boolean }) => {
                           >
                             {" "}
                           </div>
-                          <p className="font-aeonikmedium">
+                          <p className="">
                             {item.name} ({roundnumber(item.value)}%)
                           </p>
                         </div>
@@ -298,16 +305,14 @@ const Storage = ({ loading: loadingModal }: { loading: boolean }) => {
 
               <div className=" h-15 bg-white rounded-lg p-5 border border-solid border-#CBCBCB-500 flex flex-col ">
                 <div className="flex flex-row justify-between mb-6">
-                  <h2 className="font-aeonikmedium"> Conversion rate</h2>
+                  <h2 > Conversion rate</h2>
 
                   <div className="flex flex-row gap-8">
-                   
                     {/* <Input
                           months={months}
                           inputChange={inputChange}
                           value={inputvalue}
                         /> */}
-
 
                     {/* <Year
                           years={years}
@@ -322,7 +327,9 @@ const Storage = ({ loading: loadingModal }: { loading: boolean }) => {
                     value={progressbarvalue}
                     circleRatio={0.5}
                     strokeWidth={10}
-                    text={String(filteredlead.length > 0 ? filteredlead.length : 0)}
+                    text={String(
+                      filteredlead.length > 0 ? filteredlead.length : 0
+                    )}
                     // subtext="20"
                     styles={{
                       root: {
@@ -368,7 +375,7 @@ const Storage = ({ loading: loadingModal }: { loading: boolean }) => {
                     <p className="font-aeonikregular text-[#425466] text-sm">
                       Leads converted{" "}
                     </p>{" "}
-                    <p className="font-aeonikmedium text-sm">
+                    <p className="text-sm">
                       {" "}
                       {filteredleadsuccess.length}
                     </p>{" "}
@@ -380,7 +387,7 @@ const Storage = ({ loading: loadingModal }: { loading: boolean }) => {
                       {" "}
                       Conversion rate
                     </p>
-                    <p className="font-aeonikmedium text-sm">
+                    <p className="text-sm">
                       {" "}
                       {filteredleadsuccess.length > 0
                         ? Math.round(
