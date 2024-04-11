@@ -5,22 +5,10 @@ import { useRouter } from "next/router";
 import logo from "../../../public/images/logo.png";
 import io from 'socket.io-client';
 import Select from "react-select";
-import { RiGroupFill } from "react-icons/ri";
 import * as ethers from "ethers";
 import { BsFolder, BsList, BsPatchPlusFill, BsPlusLg, BsSendFill, BsTrash } from "react-icons/bs";
 import { GrIntegration } from "react-icons/gr";
 import { AiOutlineUserAdd } from "react-icons/ai";
-import {
-  FiImage,
-  FiSettings,
-  FiMoon,
-  FiPaperclip,
-  FiPlusCircle,
-  FiVideo,
-  FiLogOut,
-  FiX,
-  FiEdit3,
-} from "react-icons/fi";
 import Storage from "../storage";
 import {
   LinearProgress,
@@ -49,19 +37,17 @@ import {
   useAccount
 } from "wagmi";
 import { BiSend, BiUser, BiX } from "react-icons/bi";
-import { GroupChatType, MessageType, TextAPIData } from "../types";
+import {
+  GroupChatType,
+  MessageType,
+  TextAPIData,
+  TabPanelProps,
+} from "../types";
 import Cryptr from "cryptr";
 import axios, { AxiosError } from "axios";
-import { TbCash } from "react-icons/tb";
 import toast from "react-hot-toast";
-
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
-  className?: string;
-  padding?: number;
-}
+import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { MdCloudUpload } from "react-icons/md";
 
  const sx = {
    "& .Mui-focused.MuiFormLabel-root": {
@@ -184,6 +170,12 @@ const Base = ({ children }: { children: JSX.Element[] | JSX.Element }) => {
   }
 
   useEffect(() => {
+      if (!connected) {
+          // router.push("/logout");
+      }
+  }, [connected, router])
+
+  useEffect(() => {
       if (!ranOnce.current && main) {
 
         ranOnce.current = true;
@@ -298,7 +290,7 @@ const Base = ({ children }: { children: JSX.Element[] | JSX.Element }) => {
 
   return (
     <>
-      {/* {isLoading && <Loader />} */}
+      {/* {true && <Loader />} */}
 
       {/* {!isLoading && ( */}
       {true && (
@@ -708,12 +700,23 @@ const Base = ({ children }: { children: JSX.Element[] | JSX.Element }) => {
                   size={24}
                 />
               </div> */}
-              <div
+
+              {connected && (
+                <ConnectButton
+                  showBalance={false}
+                  accountStatus={{
+                    smallScreen: "avatar",
+                    largeScreen: "full",
+                  }}
+                />
+              )}
+
+              {/* <div
                 onClick={() => router.push("/logout")}
                 className="settings text-[14px] hover:text-[#ff5100] text-[#ff5555] min-w-fit"
               >
                 Log out
-              </div>
+              </div> */}
             </div>
           </div>
           <div className="wrapper w-full flex flex-grow-[1] overflow-hidden">
@@ -723,7 +726,7 @@ const Base = ({ children }: { children: JSX.Element[] | JSX.Element }) => {
               }`}
             >
               <div
-                className={`msg`}
+                className={`msg ${pathname.includes("leads") ? "new" : ""}`}
                 title="Add More Web3 Leads"
                 onClick={() => setAddNew(true)}
               >
@@ -741,7 +744,7 @@ const Base = ({ children }: { children: JSX.Element[] | JSX.Element }) => {
               <div
                 className={`msg ${pathname.includes("") ? "active" : ""}`}
                 title="View all leads currently added"
-                onClick={() => setAddNew(true)}
+                onClick={() => route("")}
               >
                 <div className="w-[44px] min-w-[44px] flex items-center justify-center mr-[15px] rounded-[50%] bg-[#ff5555] h-[44px]">
                   <FaHome size={19} color="#fff" />
@@ -759,7 +762,7 @@ const Base = ({ children }: { children: JSX.Element[] | JSX.Element }) => {
               <div
                 className={`msg ${pathname.includes("leads") ? "active" : ""}`}
                 title="View all leads currently added"
-                onClick={() => setAddNew(true)}
+                onClick={() => route("leads")}
               >
                 <div className="w-[44px] min-w-[44px] flex items-center justify-center mr-[15px] rounded-[50%] bg-[#ff5555] h-[44px]">
                   <FaUsers size={19} color="#fff" />
@@ -776,18 +779,36 @@ const Base = ({ children }: { children: JSX.Element[] | JSX.Element }) => {
 
               <div
                 className={`msg ${
+                  pathname.includes("uploads") ? "active" : ""
+                }`}
+                title="View all uploaded lead files"
+                onClick={() => route("uploads")}
+              >
+                <div className="w-[44px] min-w-[44px] flex items-center justify-center mr-[15px] rounded-[50%] bg-[#ff5555] h-[44px]">
+                  <MdCloudUpload size={19} color="#fff" />
+                </div>
+                <div className="msg-detail w-full">
+                  <div className="msg-username">Uploads</div>
+                  <div className="msg-content">
+                    <span className="msg-message">
+                      View all uploaded lead files
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                className={`msg ${
                   pathname.includes("integrations") ? "active" : ""
                 }`}
                 title="Integrations"
-                onClick={() => {
-                  console.log("here");
-                }}
+                onClick={() => {}}
               >
                 <div className="w-[44px] min-w-[44px] flex items-center justify-center mr-[15px] rounded-[50%] bg-[#ff5555] h-[44px]">
                   <GrIntegration size={19} color="#fff" />
                 </div>
                 <div className="msg-detail w-full">
-                  <div className="msg-username">Integrations</div>
+                  <div className="msg-username">Integrations (Coming soon)</div>
                   <div className="msg-content">
                     <span className="msg-message">
                       CRM Integrations for receiving leads
@@ -797,7 +818,7 @@ const Base = ({ children }: { children: JSX.Element[] | JSX.Element }) => {
               </div>
 
               <div
-                className={`msg ${"active"}`}
+                className={`msg active !border-l-transparent`}
                 // onClick={async () => await route("storage")}
               >
                 <div className="w-[44px] min-w-[44px] flex items-center justify-center mr-[15px] rounded-[50%] bg-[#ff5555] h-[44px]">
@@ -827,8 +848,7 @@ const Base = ({ children }: { children: JSX.Element[] | JSX.Element }) => {
                 </div>
               </div>
             </div>
-
-            {children}
+            <div className="cusscroller overflow-y-scroll w-full pb-4">{children}</div>
           </div>
         </div>
       )}
