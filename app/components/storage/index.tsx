@@ -15,19 +15,8 @@ import { PieChart, Cell, Pie } from "recharts";
 import empty from "../../../public/images/empty.png";
 import { FaRegFolderOpen, FaPlus, FaTrash, FaRegClock } from "react-icons/fa";
 import {
-  BsChatText,
-  BsChatTextFill,
-  BsCloudy,
-  BsGrid3X3Gap,
-  BsList,
-  BsPeople,
-  BsPinAngle,
   BsPlusLg,
 } from "react-icons/bs";
-import { TbSearch } from "react-icons/tb";
-
-import FolderDes from "../../components/designs/folder";
-import FileDes from "../../components/designs/file";
 import { useContext, useState, useEffect, useRef } from "react";
 import { GenContext } from "../../components/extras/contexts/genContext";
 import Loader from "../../components/loader";
@@ -40,10 +29,11 @@ import {
 import { logout } from "../../components/extras/logout";
 import Dash from "../dash";
 import { useAccount } from "wagmi";
-import { encrypt } from "../extras/chat/functions";
+import { encrypt } from "../extras/functions";
 import { store } from "../types";
-import io from 'socket.io-client'
-import stc from "string-to-color";
+import io from 'socket.io-client';
+import TableComponent from "../../components/tableComponent";
+import useFormatDate from "../tableComponent/formatDate";
 
 
 let socket:any;
@@ -51,6 +41,8 @@ let socket:any;
 const Storage = ({ loading: loadingModal }: { loading: boolean }) => {
 
   const [currentDir, setCurrentDir] = useState<string[]>(["main"]);
+
+  const [selectedLeads, setSelectedLeads] = useState<any[]>([]);
 
   const loadOnce = useRef<boolean>(true);
 
@@ -115,6 +107,7 @@ const Storage = ({ loading: loadingModal }: { loading: boolean }) => {
     });
 
     const updateFl = async (data: any) => {
+
       const dir: any = await retrieveFiles(currentDir);
 
       setLoader(false);
@@ -183,7 +176,137 @@ const Storage = ({ loading: loadingModal }: { loading: boolean }) => {
 
   /*end of upload*/
 
-  const [lead, setLead] = useState<any[]>([]);
+  const handleDeleteSelected = () => {
+        
+  }
+
+  const [lead, setLead] = useState<any[]>([
+    {
+      id: 1766,
+      leadfirstname: "John",
+      leadlastname: "Philips",
+      leadauthor: 145,
+      leadauthorname: "Julia Gead",
+      leadauthorlastname: null,
+      leadstatus: "Pending",
+      leaddestination: "USA",
+      leadsource: "Refferals",
+      leadlocation: "jos",
+      leademail: "johnblack@gmail.com",
+      leadphone: "8033445522",
+      owner: "KAF79vF4pjv3",
+      created_at: "2024-03-08T16:27:55.000000Z",
+      updated_at: "2024-03-08T16:27:55.000000Z",
+      month: "Mar",
+      timeline: 2200,
+    },
+    {
+      id: 1767,
+      leadfirstname: "mathew",
+      leadlastname: "Godwin",
+      leadauthor: 145,
+      leadauthorname: "Julia Gead",
+      leadauthorlastname: null,
+      leadstatus: "Pending",
+      leaddestination: "Ethopia",
+      leadsource: "Others",
+      leadlocation: "Abuja",
+      leademail: "mathew@gmail.com",
+      leadphone: "8148158802",
+      created_at: "2024-03-08T16:27:55.000000Z",
+      updated_at: "2024-03-08T16:27:55.000000Z",
+      month: "Mar",
+      timeline: 2201,
+    },
+    {
+      id: 1750,
+      leadfirstname: "kalu",
+      leadlastname: "paul",
+      leadauthor: 145,
+      leadauthorname: "Julia Gead",
+      leadauthorlastname: "Enovertg",
+      leadstatus: "Pending",
+      leaddestination: null,
+      leadsource: "Refferals",
+      leadlocation: null,
+      leademail: "kaludivine5@gmail.com",
+      agentid: 191,
+      assignedagent: "kalu Divine",
+      leadphone: "15345475647",
+      created_at: "2024-02-29T12:21:55.000000Z",
+      updated_at: "2024-02-29T15:23:39.000000Z",
+      month: "Feb",
+      timeline: 2182,
+    },
+    {
+      id: 1500,
+      leadfirstname: "mark",
+      leadlastname: "john",
+      leadauthor: 145,
+      leadauthorname: "Julia Gead",
+      leadauthorlastname: "Enovertg",
+      leadstatus: "Closed [Failed]",
+      leaddestination: null,
+      leadsource: "Manual entry",
+      leadlocation: null,
+      leademail: "johnmark@gmail.com",
+      agentid: 191,
+      assignedagent: "kalu Divine",
+      leadphone: "15634767567",
+      created_at: "2024-02-28T21:23:07.000000Z",
+      updated_at: "2024-03-07T12:37:54.000000Z",
+      month: "Feb",
+      timeline: 1932,
+    },
+    {
+      id: 500,
+      leadfirstname: "john",
+      leadlastname: "Obi",
+      leadauthor: 145,
+      leadauthorname: "Julia Gead",
+      leadauthorlastname: "Enovertg",
+      leadstatus: "Closed [Failed]",
+      leaddestination: null,
+      leadsource: "Refferals",
+      leadlocation: null,
+      leademail: "bi@gmail.com",
+      agentid: 191,
+      assignedagent: "kalu Divine",
+      leadphone: "14575674780",
+      property: null,
+      owner: "KAF79vF4pjv3",
+      leadcity: "",
+      leadnote: "",
+      referredagent: null,
+      created_at: "2024-02-28T09:40:58.000000Z",
+      updated_at: "2024-03-01T07:15:27.000000Z",
+      month: "Feb",
+      timeline: 927,
+    },
+    {
+      id: 499,
+      leadfirstname: "Joel",
+      leadlastname: "George",
+      leadauthor: 145,
+      leadauthorname: "Julia Gead",
+      leadauthorlastname: "Enovertg",
+      leadstatus: "Ongoing",
+      leaddestination: null,
+      leadsource: "Refferals",
+      leadlocation: null,
+      leademail: "idiaghegeorge9@gmail.com",
+      agentid: 191,
+      assignedagent: "kalu Divine",
+      leadphone: "19209203909",
+      leadcity: "",
+      leadnote: "",
+      referredagent: null,
+      created_at: "2024-02-27T11:28:13.000000Z",
+      updated_at: "2024-02-29T12:11:14.000000Z",
+      month: "Feb",
+      timeline: 914,
+    },
+  ]);
 
   let newLeads: any = {};
 
@@ -208,6 +331,8 @@ const Storage = ({ loading: loadingModal }: { loading: boolean }) => {
       color: newcolor,
     };
   });
+
+  const formatDate = useFormatDate()
 
   const roundnumber = (value: number) => {
     // Check if the number has a fractional part
@@ -242,7 +367,7 @@ const Storage = ({ loading: loadingModal }: { loading: boolean }) => {
             onDrop={(event) => {
               dropHere(event);
             }}
-            className="w-full flex pt-5 px-5 items-start justify-between filedrop min-h-screen"
+            className="w-full flex pt-5 px-5 items-start flex-col justify-between filedrop min-h-screen"
           >
             {/* continue here instead */}
 
@@ -256,30 +381,38 @@ const Storage = ({ loading: loadingModal }: { loading: boolean }) => {
                   <div className="">
                     <PieChart width={200} height={200}>
                       <Pie
-                        data={newleads.length ? newleads : [{ name: "No leads", value: 100 }]}
+                        data={
+                          newleads.length
+                            ? newleads
+                            : [{ name: "No leads", value: 100 }]
+                        }
                         dataKey="value"
                         outerRadius={100}
                       >
-                        {(newleads.length ? newleads : [{ name: "No Leads", value: 100 }]).map(
-                          (entry, index) => (
-                            <Cell
-                              style={{
-                                outline: "none",
-                              }}
-                              key={`cell-${index}`}
-                              fill={
-                                entry.value > 0
-                                  ? colors[index % colors.length]
-                                  : "yellow"
-                              }
-                            />
-                          )
-                        )}
+                        {(newleads.length
+                          ? newleads
+                          : [{ name: "No Leads", value: 100 }]
+                        ).map((entry, index) => (
+                          <Cell
+                            style={{
+                              outline: "none",
+                            }}
+                            key={`cell-${index}`}
+                            fill={
+                              entry.value > 0
+                                ? colors[index % colors.length]
+                                : "yellow"
+                            }
+                          />
+                        ))}
                       </Pie>
                     </PieChart>
                   </div>
                   <div className=" flex flex-col gap-3 pt-4">
-                    {(updatedNewLeads.length ? updatedNewLeads : [{ name: "No Leads", value: 100 }]).map((item, ii) => {
+                    {(updatedNewLeads.length
+                      ? updatedNewLeads
+                      : [{ name: "No Leads", value: 100 }]
+                    ).map((item, ii) => {
                       return (
                         <div
                           key={ii}
@@ -305,7 +438,7 @@ const Storage = ({ loading: loadingModal }: { loading: boolean }) => {
 
               <div className=" h-15 bg-white rounded-lg p-5 border border-solid border-#CBCBCB-500 flex flex-col ">
                 <div className="flex flex-row justify-between mb-6">
-                  <h2 > Conversion rate</h2>
+                  <h2> Conversion rate</h2>
 
                   <div className="flex flex-row gap-8">
                     {/* <Input
@@ -375,10 +508,7 @@ const Storage = ({ loading: loadingModal }: { loading: boolean }) => {
                     <p className="font-aeonikregular text-[#425466] text-sm">
                       Leads converted{" "}
                     </p>{" "}
-                    <p className="text-sm">
-                      {" "}
-                      {filteredleadsuccess.length}
-                    </p>{" "}
+                    <p className="text-sm"> {filteredleadsuccess.length}</p>{" "}
                   </div>
 
                   <div className="flex gap-1">
@@ -425,106 +555,160 @@ const Storage = ({ loading: loadingModal }: { loading: boolean }) => {
               }}
             />
 
-            {/* <div className="w-full st:!pl-0 pb-[65px] transition-all delay-500 h-full flex flex-col">
-              {loading && (
-                <Box>
-                  <LinearProgress
-                    variant="indeterminate"
-                    sx={{
-                      backgroundColor: "#ececec",
-                      color: "#ececec",
-                      height: 5,
-                      width: "100%",
-                      "& .MuiLinearProgress-bar": {
-                        backgroundColor: "#ff5555",
-                        borderBottomRightRadius: "16px",
-                        borderTopRightRadius: "16px",
+            <TableComponent
+              headerName="Leads"
+              filters={[
+                {
+                  key: "leadstatus",
+                  options: [
+                    { value: "", label: "Status" },
+                    {
+                      value: "Ongoing",
+                      label: "Ongoing",
+                    },
+
+                    { label: "New", value: "New" },
+                    { label: "No Answer", value: "No Answer" },
+                    { label: "Negotiating", value: "Negotiating" },
+                    { label: "Unresponsive", value: "Unresponsive" },
+                    { label: "Postpone", value: "Postpone" },
+                    { label: "Potential", value: "Potential" },
+
+                    {
+                      value: "Pending",
+                      label: "Pending",
+                    },
+                    {
+                      value: "Not Intrested",
+                      label: "Not Intrested",
+                    },
+                    {
+                      value: "Closed [Success]",
+                      label: " Success",
+                    },
+                    {
+                      value: "Closed [Failed]",
+                      label: "Failed",
+                    },
+                  ],
+                  placeholder: "Status",
+                  defaultValue: "",
+                },
+
+                {
+                  key: "score",
+                  options: [
+                    { value: "", label: "Score" },
+                    { value: "10", label: "10" },
+                    { value: "9", label: "9" },
+                    { value: "8", label: "8" },
+                    { value: "7", label: "7" },
+                  ],
+                  placeholder: "Score",
+                  defaultValue: "",
+                },
+              ]}
+              columns={[
+                {
+                  key: "author",
+                  label: "Name",
+                  text: (item: any) =>
+                    item.leadfirstname
+                      ? `${item.leadfirstname} ${item.leadlastname || ""}`
+                      : "N/A",
+                  render: (item: any) => (
+                    <span
+                      className="flex items-center space-x-2"
+                      style={{ color: "#262626" }}
+                    >
+                      <h1 onClick={() => Router.push(`/leads/${item.id}`)}>
+                        {item.leadfirstname
+                          ? `${item.leadfirstname} ${item.leadlastname || ""}`
+                          : "N/A"}
+                      </h1>
+                    </span>
+                  ),
+                },
+                {
+                  key: "email",
+                  label: "Email",
+                  text: (item: any) => item.leademail || "N/A",
+                  render: (item: any) => (
+                    <span
+                      className="flex items-center space-x-2"
+                      style={{ color: "#262626" }}
+                    >
+                      <h1>{item.leademail || "N/A"}</h1>
+                    </span>
+                  ),
+                },
+
+                {
+                  key: "created_at",
+                  label: "Date",
+                  text: (item: any) =>
+                    item.created_at ? formatDate(item.created_at) : "N/A",
+                  render: (item: any) => (
+                    <span style={{ color: "#262626" }}>
+                      {item.created_at ? formatDate(item.created_at) : "N/A"}
+                    </span>
+                  ),
+                },
+                {
+                  key: "leadstatus",
+                  label: "Lead Status",
+                  render: (item: any) => (
+                    <span style={{ color: "#262626" }}>
+                      {item.leadstatus === "Closed [Success]"
+                        ? "Success"
+                        : item.leadstatus === "Closed [Failed]"
+                        ? "Failed"
+                        : item.leadstatus || "N/A"}
+                    </span>
+                  ),
+                },
+                {
+                  key: "action",
+                  label: "",
+                  render: (item: any) => (
+                    <span
+                      className="underline"
+                      style={{ color: "#262626" }}
+                      onClick={() => {
+                        Router.push(`/leads/${item.id}`);
+                      }}
+                    >
+                      View
+                    </span>
+                  ),
+                  // Assuming "View" is always available
+                },
+                // ... add other columns as needed
+              ]}
+              data={lead}
+              isLoading={loading}
+              error={error}
+              onSelectRow={(item: any) => false}
+              hiddenFilters={["score"]}
+              showSearchButton={false}
+              style={{}}
+              multiSelect={true}
+              pagination={true}
+              onSelectionChange={(selected: any) => setSelectedLeads(selected)}
+              actionButtons={
+                selectedLeads.length > 0
+                  ? [
+                      {
+                        label: "Delete",
+                        action: handleDeleteSelected,
+                        className:
+                          "bg-[#FFF2F0] text-[#E2341D] text-sm flex items-center space-x-3 py-2 px-3 rounded-md",
+                        icon: <FaTrash size={14} />,
                       },
-                    }}
-                  />
-                </Box>
-              )}
-
-              <div className="px-5 h-full">
-                <div className="px-1">
-                  {!Boolean(dirContent.length) && !isLoading && (
-                    <div
-                      className="empty"
-                      style={{
-                        display: "flex",
-                        width: "100%",
-                        height: "fit-content",
-                        justifyContent: "center",
-                        flexDirection: "column",
-                        alignItems: "center",
-                      }}
-                    >
-                      <div className="h-[259px] justify-center w-full my-5 flex">
-                        <Image
-                          src={empty}
-                          className="mb-3"
-                          width={350}
-                          height={259}
-                          alt="No files yet"
-                        />
-                      </div>
-
-                      <div className="mt-2 mb-3">
-                        <h2 className="text-[22px] text-center font-bold">
-                          Drop files here
-                        </h2>
-                        <span className="mt-2 text-[17px] flex w-full text-center">
-                          or use the `{<FaPlus size={17} />}` button
-                        </span>
-                      </div>
-                    </div>
-                  )}
-
-                  {Boolean(dirContent.length) && (
-                    <div
-                      style={{
-                        gridTemplateColumns:
-                          "repeat(auto-fill, minmax(150px, 1fr))",
-                      }}
-                      className="flist pt-7 grid gap-2 grid-flow-dense"
-                    >
-                      {dirContent.map((e: any, i: number) => {
-                        return (
-                          <FileDes
-                            key={i}
-                            data={{
-                              name: e["name"],
-                              size: e["size"],
-                              key: e["fileid"],
-                            }}
-                            text={e["extension"]}
-                          />
-                        );
-                        // } else {
-                        //   let size: number = 0;
-                        //   e.forEach((x: any) => {
-                        //     if (x.file) {
-                        //       size += x.size;
-                        //     }
-                        //   });
-                        //   return (
-                        //     <FolderDes
-                        //       key={i}
-                        //       data={{
-                        //         name: e["name"],
-                        //         size,
-                        //         key: i,
-                        //         files: e["files"].length,
-                        //       }}
-                        //     />
-                        //   );
-                        // }
-                      })}
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div> */}
+                    ]
+                  : []
+              }
+            />
           </div>
         </>
       }

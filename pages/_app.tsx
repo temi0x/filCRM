@@ -23,7 +23,7 @@ const queryClient = new QueryClient();
 const config = getDefaultConfig({
   appName: "filCRM",
   projectId: process.env.NEXT_PUBLIC_PROJECT_ID || "",
-  chains: [mainnet, filecoin, polygon, optimism, arbitrum, base],
+  chains: [filecoin],
   ssr: true,
 });
 
@@ -32,6 +32,10 @@ export default function App({ Component, pageProps }: AppProps) {
     <QueryClientProvider client={queryClient}>
       <RainbowKitProvider
         coolMode
+         appInfo={{
+          appName: 'FilCRM',
+          // disclaimer: Disclaimer,
+        }}
         theme={lightTheme({
           accentColor: "#ff5555",
         })}

@@ -713,6 +713,7 @@ body::-webkit-scrollbar-thumb,
   align-items: center;
   padding: 20px;
   cursor: pointer;
+  border-left: 4px solid transparent;
   transition: 0.2s;
   position: relative;
 }

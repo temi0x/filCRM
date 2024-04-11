@@ -98,4 +98,12 @@ export interface IndexContextProps {
   login?: () => Promise<void>;
 }
 
+export interface TabPanelProps {
+  children?: React.ReactNode;
+  index: number;
+  value: number;
+  className?: string;
+  padding?: number;
+}
+
 export {}
