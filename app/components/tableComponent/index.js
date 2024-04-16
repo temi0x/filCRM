@@ -157,7 +157,7 @@ function TableComponent({
     <div className="mt-14 w-full">
       <div className="flex items-center w-full  justify-between mb-[1.3rem]">
         {headerName && (
-          <h1 className="font-aeonikmedium text-[1.125rem]">{headerName}</h1>
+          <h1 className="font-[500] text-[1.125rem]">{headerName}</h1>
         )}
         <div className="flex justify-between    space-x-[1rem]">
           {filters &&
@@ -200,7 +200,7 @@ function TableComponent({
                 className="text-[#4E4E4E] border border-[#D0D5DD] cursor-pointer text-sm flex bg-white items-center space-x-3 p-[0.6rem] rounded-md"
               >
                 <FiDownloadCloud size={19} />
-                <h1>Download </h1>
+                <h1>Export </h1>
               </div>
             )}
           </div>
@@ -237,10 +237,10 @@ function TableComponent({
             <div className="py-4 px-6 bg-white m-auto -mb-[1px] rounded-t-[.9rem]">
               <div className="mb-2 flex items-start justify-between">
                 <div>
-                  <h2 className=" text-[#262626] text-xl !font-aeonikmedium">
+                  <h2 className=" text-[#262626] text-xl !font-[500]">
                     Export Data
                   </h2>
-                  <span className="text-[#5a5a5a] !font-aeonikregular text-sm">
+                  <span className="text-[#5a5a5a] text-sm">
                     Export your table data to excel format.
                   </span>
                 </div>
@@ -256,25 +256,21 @@ function TableComponent({
               </div>
 
               <div className="py-3">
-                <label className="text-[#5a5a5a] font-aeonikregular mb-4 text-sm">
+                <label className="text-[#5a5a5a] mb-4 text-sm">
                   Export
                 </label>
 
                 <Dropdown
-                  options={[
-                    "Everything",
-                    "Based on Date Range",
-                    "Based on Filters",
-                  ]}
+                  options={["Everything", "Based on Date Range"]}
                   value="Select Export Option"
                   style={{
                     width: "100%",
                   }}
                   onSelectedChange={(e) => {
                     switch (e) {
-                      case "Based on Filters":
-                        setExport("filter");
-                        break;
+                      // case "Based on Filters":
+                      //   setExport("filter");
+                      //   break;
 
                       case "Based on Date Range":
                         setExport("date");
@@ -290,13 +286,13 @@ function TableComponent({
 
               {dExport == "date" && (
                 <div className="py-3">
-                  <label className="text-[#565656] text-[18px] font-aeonikregular mb-4 font-[600]">
+                  <label className="text-[#565656] text-[18px] mb-4 font-[600]">
                     Date Range
                   </label>
 
                   <div className="flex items-center justify-center">
                     <div className="py-3 w-full">
-                      <label className="text-[#565656] block font-aeonikregular mb-2 font-[300]">
+                      <label className="text-[#565656] block mb-2 font-[300]">
                         From
                       </label>
 
@@ -309,7 +305,7 @@ function TableComponent({
                     </div>
 
                     <div className="py-3 w-full">
-                      <label className="text-[#565656] block font-aeonikregular mb-2 font-[300]">
+                      <label className="text-[#565656] block mb-2 font-[300]">
                         To
                       </label>
 
@@ -410,7 +406,7 @@ function TableComponent({
 
                     link.click();
                   }}
-                  className="!py-3 !min-w-[220px] !text-sm !px-3 !flex !font-aeonikmedium !items-center !text-[#2D8A39] !fill-white !bg-[#F0FAF0] !normal-case !transition-all !delay-500 !rounded-lg"
+                  className="!py-3 !min-w-[220px] !text-sm !px-3 !flex !font-[500] !items-center !text-[#ff5555] !fill-white !bg-[#fff1f1] !normal-case !transition-all !delay-500 !rounded-lg"
                 >
                   Export Data
                 </Button>
@@ -433,7 +429,7 @@ function TableComponent({
                   value={search}
                   ref={inputRef}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="border p-1 rounded w-full border-none outline-none text-sm font-aeonikmedium"
+                  className="border p-1 rounded w-full border-none outline-none text-sm font-[500]"
                 />
               </div>
             )}
@@ -445,7 +441,9 @@ function TableComponent({
           <thead>
             <tr className="border-t border-[#f2f2f2] bg-[#FAFAFB]">
               {multiSelect && (
-                <th className="pl-[13px]">
+                <th
+                  className={`text-start text-[#8492A6] text-sm py-4 pl-6`}
+                >
                   <Checkbox
                     onClick={(e) => handleSelectAll(e.target.checked)}
                     className={` 
@@ -466,7 +464,7 @@ function TableComponent({
                       : {}),
                     ...col.headerStyle,
                   }}
-                  className={`text-start font-aeonikregular text-[#8492A6] text-sm py-4 ${
+                  className={`text-start text-[#8492A6] text-sm py-4 ${
                     multiSelect ? "pr-6" : "px-6"
                   }`}
                 >
@@ -494,7 +492,7 @@ function TableComponent({
               <tr>
                 <td
                   colSpan={columns.length}
-                  className="text-center px-6 py-4 font-aeonikregular text-sm"
+                  className="text-center px-6 py-4 text-sm"
                 >
                   Loading...
                 </td>
@@ -505,7 +503,7 @@ function TableComponent({
               <tr>
                 <td
                   colSpan={columns.length}
-                  className="text-center px-6 py-4 font-aeonikregular text-sm text-red-500"
+                  className="text-center px-6 py-4 text-sm text-red-500"
                 >
                   Error: {error.message}
                 </td>
@@ -517,7 +515,7 @@ function TableComponent({
               currentItems.map((item, idx) => (
                 <tr
                   key={idx}
-                  className="border-t border-[#f2f2f2] font-aeonikregular text-[#8492A6] text-xs"
+                  className="border-t border-[#f2f2f2] text-[#8492A6] text-xs"
                 >
                   {multiSelect && (
                     <td className="py-4 pl-6">
@@ -547,7 +545,7 @@ function TableComponent({
               <tr>
                 <td
                   colSpan={columns.length}
-                  className="text-start px-6 py-4 font-aeonikregular text-sm"
+                  className="text-start px-6 py-4 text-sm"
                 >
                   No table data available
                 </td>
@@ -566,8 +564,8 @@ function TableComponent({
                 key={i}
                 className={`border-[#f2f2f2] p-2 flex items-center justify-center text-sm ${
                   currentPage === i + 1
-                    ? "bg-gray-200 rounded-full font-aeonikregular h-7 w-7 text-center"
-                    : "font-aeonikregular h-7 w-7 text-center"
+                    ? "bg-gray-200 rounded-full h-7 w-7 text-center"
+                    : "h-7 w-7 text-center"
                 }`}
                 onClick={() => setCurrentPage(i + 1)}
               >
