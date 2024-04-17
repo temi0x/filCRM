@@ -70,12 +70,12 @@ const ViewLead = () => {
           return String(addr).substring(0, 4) +
                 "..." + String(addr).substring(38, 42);
     }
-    
+
     return (
       <>
         <Head>
           <title>
-            {selectedLead.firstname} {selectedLead.lastname} | Lead | filCRM
+            {selectedLead.firstname} {selectedLead.lastname} | Leads | filCRM
           </title>
         </Head>
 
