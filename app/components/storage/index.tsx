@@ -9,11 +9,10 @@ import {
   Box
 } from "@mui/material";
 import Router from "next/router";
-import Image from "next/image";
 import { CircularProgressbarWithChildren } from "react-circular-progressbar";
 import { PieChart, Cell, Pie } from "recharts";
 import empty from "../../../public/images/empty.png";
-import { FaRegFolderOpen, FaPlus, FaTrash, FaRegClock } from "react-icons/fa";
+import { FaTrash, FaRegClock } from "react-icons/fa";
 import {
   BsPlusLg,
 } from "react-icons/bs";
@@ -34,7 +33,7 @@ import { store } from "../types";
 import io from 'socket.io-client';
 import TableComponent from "../../components/tableComponent";
 import useFormatDate from "../tableComponent/formatDate";
-
+import { faker } from "@faker-js/faker";
 
 let socket:any;
 
@@ -180,141 +179,38 @@ const Storage = ({ loading: loadingModal }: { loading: boolean }) => {
         
   }
 
-  const [lead, setLead] = useState<any[]>([
-    {
-      id: 1766,
-      leadfirstname: "John",
-      leadlastname: "Philips",
-      leadauthor: 145,
-      leadauthorname: "Julia Gead",
-      leadauthorlastname: null,
-      leadstatus: "Pending",
-      leaddestination: "USA",
-      leadsource: "Refferals",
-      leadlocation: "jos",
-      leademail: "johnblack@gmail.com",
-      leadphone: "8033445522",
-      owner: "KAF79vF4pjv3",
-      created_at: "2024-03-08T16:27:55.000000Z",
-      updated_at: "2024-03-08T16:27:55.000000Z",
-      month: "Mar",
-      timeline: 2200,
-    },
-    {
-      id: 1767,
-      leadfirstname: "mathew",
-      leadlastname: "Godwin",
-      leadauthor: 145,
-      leadauthorname: "Julia Gead",
-      leadauthorlastname: null,
-      leadstatus: "Pending",
-      leaddestination: "Ethopia",
-      leadsource: "Others",
-      leadlocation: "Abuja",
-      leademail: "mathew@gmail.com",
-      leadphone: "8148158802",
-      created_at: "2024-03-08T16:27:55.000000Z",
-      updated_at: "2024-03-08T16:27:55.000000Z",
-      month: "Mar",
-      timeline: 2201,
-    },
-    {
-      id: 1750,
-      leadfirstname: "kalu",
-      leadlastname: "paul",
-      leadauthor: 145,
-      leadauthorname: "Julia Gead",
-      leadauthorlastname: "Enovertg",
-      leadstatus: "Pending",
-      leaddestination: null,
-      leadsource: "Refferals",
-      leadlocation: null,
-      leademail: "kaludivine5@gmail.com",
-      agentid: 191,
-      assignedagent: "kalu Divine",
-      leadphone: "15345475647",
-      created_at: "2024-02-29T12:21:55.000000Z",
-      updated_at: "2024-02-29T15:23:39.000000Z",
-      month: "Feb",
-      timeline: 2182,
-    },
-    {
-      id: 1500,
-      leadfirstname: "mark",
-      leadlastname: "john",
-      leadauthor: 145,
-      leadauthorname: "Julia Gead",
-      leadauthorlastname: "Enovertg",
-      leadstatus: "Closed [Failed]",
-      leaddestination: null,
-      leadsource: "Manual entry",
-      leadlocation: null,
-      leademail: "johnmark@gmail.com",
-      agentid: 191,
-      assignedagent: "kalu Divine",
-      leadphone: "15634767567",
-      created_at: "2024-02-28T21:23:07.000000Z",
-      updated_at: "2024-03-07T12:37:54.000000Z",
-      month: "Feb",
-      timeline: 1932,
-    },
-    {
-      id: 500,
-      leadfirstname: "john",
-      leadlastname: "Obi",
-      leadauthor: 145,
-      leadauthorname: "Julia Gead",
-      leadauthorlastname: "Enovertg",
-      leadstatus: "Closed [Failed]",
-      leaddestination: null,
-      leadsource: "Refferals",
-      leadlocation: null,
-      leademail: "bi@gmail.com",
-      agentid: 191,
-      assignedagent: "kalu Divine",
-      leadphone: "14575674780",
-      property: null,
-      owner: "KAF79vF4pjv3",
-      leadcity: "",
-      leadnote: "",
-      referredagent: null,
-      created_at: "2024-02-28T09:40:58.000000Z",
-      updated_at: "2024-03-01T07:15:27.000000Z",
-      month: "Feb",
-      timeline: 927,
-    },
-    {
-      id: 499,
-      leadfirstname: "Joel",
-      leadlastname: "George",
-      leadauthor: 145,
-      leadauthorname: "Julia Gead",
-      leadauthorlastname: "Enovertg",
-      leadstatus: "Ongoing",
-      leaddestination: null,
-      leadsource: "Refferals",
-      leadlocation: null,
-      leademail: "idiaghegeorge9@gmail.com",
-      agentid: 191,
-      assignedagent: "kalu Divine",
-      leadphone: "19209203909",
-      leadcity: "",
-      leadnote: "",
-      referredagent: null,
-      created_at: "2024-02-27T11:28:13.000000Z",
-      updated_at: "2024-02-29T12:11:14.000000Z",
-      month: "Feb",
-      timeline: 914,
-    },
-  ]);
+  const createRandomLead = () => {
+      return {
+         id: faker.number.int(),
+         username: faker.internet.userName(),
+         firstname: faker.person.firstName(),
+         lastname: faker.person.lastName(),
+         status: faker.helpers.arrayElement(["Pending", "Ongoing", "Failed", "Success"]),
+         destination: faker.location.country(),
+         source: faker.helpers.arrayElement(["Referrals", "Others", "Manual entry"]),
+         location: faker.location.city(),
+         address: faker.finance.ethereumAddress(),
+         phone: faker.phone.number(),
+         created_at: faker.date.recent(),
+         updated_at: faker.date.recent(),
+         month: faker.date.month(),
+         timeline: faker.number.int()
+      }
+  }
+
+  const [lead, setLead] = useState<any[]>(faker.helpers.multiple(createRandomLead, {
+    count: 25  
+  }));
+
+
 
   let newLeads: any = {};
 
   lead.forEach((aLead) => {
-    if (newLeads[aLead.leadsource]) {
-      newLeads[aLead.leadsource] += 1;
+    if (newLeads[aLead.source]) {
+      newLeads[aLead.source] += 1;
     } else {
-      newLeads[aLead.leadsource] = 1;
+      newLeads[aLead.source] = 1;
     }
   });
 
@@ -343,13 +239,13 @@ const Storage = ({ loading: loadingModal }: { loading: boolean }) => {
   };
 
   const filteredlead = lead.filter((item) => {
-    return true;
+    return item.status === "Success";
   });
 
   const progressbarvalue = (filteredlead.length / lead.length) * 100;
 
   const filteredleadsuccess = lead.filter(
-    (item) => item.status === "success"
+    (item) => item.status === "Success"
   );
 
   return (
@@ -478,13 +374,10 @@ const Storage = ({ loading: loadingModal }: { loading: boolean }) => {
                         stroke: "#C4C4C4",
                         strokeLinecap: "round",
                       },
-                      // trailColor: "grey",
-                      // background: "red",
-
                       text: {
                         fill: "black",
                         fontSize: "12px",
-                        transform: " translatex(5px)rotate(90deg)",
+                        transform: " translate(3px, -5px) rotate(90deg)",
                         transformOrigin: "center center",
                       },
                     }}
@@ -556,24 +449,23 @@ const Storage = ({ loading: loadingModal }: { loading: boolean }) => {
             />
 
             <TableComponent
-              headerName="Leads"
+              headerName="Latest Leads"
+              dropdown
               filters={[
                 {
-                  key: "leadstatus",
+                  key: "status",
                   options: [
                     { value: "", label: "Status" },
                     {
                       value: "Ongoing",
                       label: "Ongoing",
                     },
-
                     { label: "New", value: "New" },
                     { label: "No Answer", value: "No Answer" },
                     { label: "Negotiating", value: "Negotiating" },
                     { label: "Unresponsive", value: "Unresponsive" },
                     { label: "Postpone", value: "Postpone" },
                     { label: "Potential", value: "Potential" },
-
                     {
                       value: "Pending",
                       label: "Pending",
@@ -583,28 +475,15 @@ const Storage = ({ loading: loadingModal }: { loading: boolean }) => {
                       label: "Not Intrested",
                     },
                     {
-                      value: "Closed [Success]",
+                      value: "Success",
                       label: " Success",
                     },
                     {
-                      value: "Closed [Failed]",
+                      value: "Failed",
                       label: "Failed",
                     },
                   ],
                   placeholder: "Status",
-                  defaultValue: "",
-                },
-
-                {
-                  key: "score",
-                  options: [
-                    { value: "", label: "Score" },
-                    { value: "10", label: "10" },
-                    { value: "9", label: "9" },
-                    { value: "8", label: "8" },
-                    { value: "7", label: "7" },
-                  ],
-                  placeholder: "Score",
                   defaultValue: "",
                 },
               ]}
@@ -613,32 +492,42 @@ const Storage = ({ loading: loadingModal }: { loading: boolean }) => {
                   key: "author",
                   label: "Name",
                   text: (item: any) =>
-                    item.leadfirstname
-                      ? `${item.leadfirstname} ${item.leadlastname || ""}`
+                    item.firstname
+                      ? `${item.firstname} ${item.lastname || ""}`
                       : "N/A",
                   render: (item: any) => (
                     <span
                       className="flex items-center space-x-2"
                       style={{ color: "#262626" }}
                     >
-                      <h1 onClick={() => Router.push(`/leads/${item.id}`)}>
-                        {item.leadfirstname
-                          ? `${item.leadfirstname} ${item.leadlastname || ""}`
+                      <h1
+                        onClick={() =>
+                          Router.push(`/dashboard/leads/${item.id}`)
+                        }
+                      >
+                        {item.firstname
+                          ? `${item.firstname} ${item.lastname || ""}`
                           : "N/A"}
                       </h1>
                     </span>
                   ),
                 },
                 {
-                  key: "email",
-                  label: "Email",
-                  text: (item: any) => item.leademail || "N/A",
+                  key: "address",
+                  label: "Address",
+                  text: (item: any) => item.address || "N/A",
                   render: (item: any) => (
                     <span
                       className="flex items-center space-x-2"
                       style={{ color: "#262626" }}
                     >
-                      <h1>{item.leademail || "N/A"}</h1>
+                      <h1>
+                        {item.address
+                          ? String(item.address).substring(0, 4) +
+                            "..." +
+                            String(item.address).substring(38, 42)
+                          : "N/A"}
+                      </h1>
                     </span>
                   ),
                 },
@@ -655,15 +544,11 @@ const Storage = ({ loading: loadingModal }: { loading: boolean }) => {
                   ),
                 },
                 {
-                  key: "leadstatus",
+                  key: "status",
                   label: "Lead Status",
                   render: (item: any) => (
                     <span style={{ color: "#262626" }}>
-                      {item.leadstatus === "Closed [Success]"
-                        ? "Success"
-                        : item.leadstatus === "Closed [Failed]"
-                        ? "Failed"
-                        : item.leadstatus || "N/A"}
+                      {item.status || "N/A"}
                     </span>
                   ),
                 },
@@ -675,7 +560,7 @@ const Storage = ({ loading: loadingModal }: { loading: boolean }) => {
                       className="underline"
                       style={{ color: "#262626" }}
                       onClick={() => {
-                        Router.push(`/leads/${item.id}`);
+                        Router.push(`/dashboard/leads/${item.id}`);
                       }}
                     >
                       View
@@ -685,7 +570,11 @@ const Storage = ({ loading: loadingModal }: { loading: boolean }) => {
                 },
                 // ... add other columns as needed
               ]}
-              data={lead}
+              data={lead.sort(
+                (a: any, b: any) =>
+                  new Date(b.created_at).getTime() -
+                  new Date(a.created_at).getTime()
+              )}
               isLoading={loading}
               error={error}
               onSelectRow={(item: any) => false}
@@ -693,7 +582,7 @@ const Storage = ({ loading: loadingModal }: { loading: boolean }) => {
               showSearchButton={false}
               style={{}}
               multiSelect={true}
-              pagination={true}
+              pagination={false}
               onSelectionChange={(selected: any) => setSelectedLeads(selected)}
               actionButtons={
                 selectedLeads.length > 0
@@ -702,7 +591,7 @@ const Storage = ({ loading: loadingModal }: { loading: boolean }) => {
                         label: "Delete",
                         action: handleDeleteSelected,
                         className:
-                          "bg-[#FFF2F0] text-[#E2341D] text-sm flex items-center space-x-3 py-2 px-3 rounded-md",
+                          "bg-[#FFF2F0] text-[#E2341D] text-sm flex items-center space-x-3 py-2 px-3 rounded-md h-full border border-solid border-[#E2341D]",
                         icon: <FaTrash size={14} />,
                       },
                     ]

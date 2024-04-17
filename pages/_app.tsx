@@ -18,6 +18,7 @@ import {
   base,
 } from "wagmi/chains";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import { Toaster } from "react-hot-toast";
 const queryClient = new QueryClient();
 
 const config = getDefaultConfig({
@@ -28,20 +29,23 @@ const config = getDefaultConfig({
 });
 
 export default function App({ Component, pageProps }: AppProps) {
-  return <WagmiProvider config={config}>
-    <QueryClientProvider client={queryClient}>
-      <RainbowKitProvider
-        coolMode
-         appInfo={{
-          appName: 'FilCRM',
-          // disclaimer: Disclaimer,
-        }}
-        theme={lightTheme({
-          accentColor: "#ff5555",
-        })}
-      >
-        <Component {...pageProps} />
-      </RainbowKitProvider>
-    </QueryClientProvider>
-  </WagmiProvider>;
+  return (
+    <WagmiProvider config={config}>
+      <QueryClientProvider client={queryClient}>
+        <RainbowKitProvider
+          coolMode
+          appInfo={{
+            appName: "FilCRM",
+            // disclaimer: Disclaimer,
+          }}
+          theme={lightTheme({
+            accentColor: "#ff5555",
+          })}
+        >
+          <Toaster />
+          <Component {...pageProps} />
+        </RainbowKitProvider>
+      </QueryClientProvider>
+    </WagmiProvider>
+  );
 }

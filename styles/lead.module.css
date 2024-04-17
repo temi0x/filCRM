@@ -1,0 +1,21 @@
+.banners>button.complete {
+    cursor: default;
+    background:#ff5555;
+    color: white;
+}
+
+.banners>button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 180px;
+  width:180px;
+  position: relative;
+  background: transparent;
+  color: #ff5555;
+  border-radius: 5px;
+  border: 1px solid #ff5555;
+  position: relative;
+  font-weight: 400;
+  cursor: pointer;
+}

@@ -32,7 +32,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts"
-  ],
+, "pages/404.tsx"  ],
   "exclude": [
     "node_modules"
   ]

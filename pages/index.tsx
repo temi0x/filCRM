@@ -3,6 +3,7 @@ import {  useConnectModal, useAccountModal, useChainModal, } from "@rainbow-me/r
 import { useAccount } from "wagmi";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+
 const inter = Inter({ subsets: ["latin"] });
 
 

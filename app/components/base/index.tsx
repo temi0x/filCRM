@@ -87,6 +87,7 @@ const TabPanel = (props: TabPanelProps) => {
 let socket: any;
 
 const Base = ({ children }: { children: JSX.Element[] | JSX.Element }) => {
+
   const [loginData, setLoginData] = useState<any>({});
 
   const router = useRouter();
@@ -186,99 +187,9 @@ const Base = ({ children }: { children: JSX.Element[] | JSX.Element }) => {
   }, [main]);
 
 
-  useEffect(() => {
-    async function init() {
+  const route = async (path: string, condition?: boolean) => {
 
-      await beginStorageProvider({
-        user: address || "",
-        contract,
-        randId: main,
-        participants,
-      });
-
-      const { data: { user } } = await axios.get('/user', {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('clover-x')}`
-        }
-      });
-
-      if (user.name) setNameModal(false);
-
-      const flist = await retrieveFiles();
-
-
-      let tSize = 0;
-
-      flist.forEach((e: any) => {
-        tSize += e.size;
-      });
-
-      setFilelist(tSize / 1_073_741_824);
-
-
-
-      if (pathname[pathname.length - 1] == "dashboard") {
-        document.querySelector(".msg.active")?.scrollIntoView();
-      }
-
-
-      if (!routing.current) setLoader(false);
-      
-    }
-
-    if (name != undefined) {
-      init();
-    }
-  }, [
-    main,
-    currentDir,
-    uploadData,
-    update,
-    contract,
-    name,
-    address,
-    participants
-  ]);
-
-  const submitName = async () => {
-      if (aliasLoading) return;
-
-      setAliasLoading(true);
-
-      if (!alias.length) { 
-        setAliasError("Your name is required");
-        setAliasLoading(false);
-        return;
-      }
-
-      try {
-
-      const { data: { user } } = await axios.patch('/user', { name: alias }, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('clover-x')}`
-        }
-      });
-
-      localStorage.setItem("cloveruser", JSON.stringify(user));
-
-      setAliasLoading(false);
-
-      setNameModal(false)
-    
-    }catch (err) {
-
-        const error = err as any
-
-        setAliasLoading(false)        
-
-        setAliasError(error?.response?.data.message || "")
-
-    }
-
-  };
-
-  const route = async (path: string) => {
-    if (pathname.includes(path)) return;
+    if ((typeof condition !== 'boolean' && pathname.includes(path)) || (typeof condition == 'boolean' && condition)) return;
 
     // window.location.href = `/dashboard/${path}`;
 
@@ -726,9 +637,9 @@ const Base = ({ children }: { children: JSX.Element[] | JSX.Element }) => {
               }`}
             >
               <div
-                className={`msg ${pathname.includes("leads") ? "new" : ""}`}
+                className={`msg ${(pathname.includes("create") && pathname.includes('lead')) ? "new" : ""}`}
                 title="Add More Web3 Leads"
-                onClick={() => setAddNew(true)}
+                onClick={() => route("lead/create")}
               >
                 <div className="w-[44px] min-w-[44px] flex items-center justify-center mr-[15px] rounded-[50%] bg-[#ff5555] h-[44px]">
                   <BsPlusLg size={19} color="#fff" />
@@ -742,9 +653,18 @@ const Base = ({ children }: { children: JSX.Element[] | JSX.Element }) => {
               </div>
 
               <div
-                className={`msg ${pathname.includes("") ? "active" : ""}`}
+                className={`msg ${
+                  ["", "dashboard"].includes([...pathname]?.pop() || "")
+                    ? "active"
+                    : ""
+                }`}
                 title="View all leads currently added"
-                onClick={() => route("")}
+                onClick={() =>
+                  route(
+                    "",
+                    ["", "dashboard"].includes([...pathname]?.pop() || "")
+                  )
+                }
               >
                 <div className="w-[44px] min-w-[44px] flex items-center justify-center mr-[15px] rounded-[50%] bg-[#ff5555] h-[44px]">
                   <FaHome size={19} color="#fff" />
@@ -848,7 +768,9 @@ const Base = ({ children }: { children: JSX.Element[] | JSX.Element }) => {
                 </div>
               </div>
             </div>
-            <div className="cusscroller overflow-y-scroll w-full pb-4">{children}</div>
+            <div className="cusscroller overflow-y-scroll w-full pb-16">
+              {children}
+            </div>
           </div>
         </div>
       )}

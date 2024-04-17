@@ -34,5 +34,3 @@ module.exports = {
   },
   plugins: [],
 };
-
-// #ff5555
