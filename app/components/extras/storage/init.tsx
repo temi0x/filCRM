@@ -104,69 +104,6 @@ export const retrieveFiles = async (folder?: string[]) => {
 
 };
 
-export const getRooms = async () => {
-
-  const token = `Bearer ${localStorage.getItem("token")}`;
-
-  const {
-    data: { rooms },
-  } = await axios.get(`/dao/${lq[0]}/rooms`, {
-    headers: { Authorization: token },
-  });
-
-  return rooms;
-};
-
-export const roomData = async (id: number) => {
-
-  const token = `Bearer ${localStorage.getItem("token")}`;
-
-  const {
-    data: { room },
-  } = await axios.get(`/dao/${lq[0]}/rooms/${id}`, {
-    headers: { Authorization: token },
-  });
-
-  return room;
-
-};
-
-export const createRoom = async (name: string, desc?: string) => {
-
-  const { data: response } = await axios.post(
-    "/api/rooms/create",
-    {
-      title: name,
-      hostWallets: [lq[3]],
-    },
-    {
-      headers: {
-        "Content-Type": "application/json",
-      },
-      baseURL: window.origin
-    },
-  ); 
-
-  const {
-    data: { room },
-  } = await axios.post(
-    `/dao/${lq[0]}/rooms`,
-    {
-      name,
-      creator: lq[3],
-      desc: desc || "",
-      meetId: response.data.roomId,
-    },
-    {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    }
-  );
-
-  return `/dashboard/rooms/${room.id}`;
-
-};
 
 /**
  * @param dirfolder: array - showing file directory till destination

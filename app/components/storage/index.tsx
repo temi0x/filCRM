@@ -28,8 +28,6 @@ import {
 import { logout } from "../../components/extras/logout";
 import Dash from "../dash";
 import { useAccount } from "wagmi";
-import { encrypt } from "../extras/functions";
-import { store } from "../types";
 import io from 'socket.io-client';
 import TableComponent from "../../components/tableComponent";
 import useFormatDate from "../tableComponent/formatDate";

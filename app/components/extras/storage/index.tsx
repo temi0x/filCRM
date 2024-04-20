@@ -57,29 +57,6 @@ export const initData: fstructure = {
   file: false,
 };
 
-export const deleteFile = async (cid: string) => {
-
-    const token = process.env.NEXT_PUBLIC_STORAGE_KEY;
-
-    const config = {
-      data: {
-
-      },
-      header: {
-        Accept: "*/*",
-        Authentication: `Bearer ${token}`,
-      },
-    };
-
-    axios.delete(`https://api-staging.web3.storage/pins/${cid}`, config).then(done => {
-        return done.data;
-    }).catch(err => {
-        return err;
-    });
-
-}
-
-
 export const getFileList = (files: (store | dir)[], dirFolder: string[], num:number = 0) => {
 
     files.forEach((file: any) => {

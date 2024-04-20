@@ -2,7 +2,6 @@ import Box from "@mui/material/Box";
 import LinearProgress from "@mui/material/LinearProgress";
 import logo from "../../../public/images/icon.png"
 import Image from "next/image";
-import { Line } from "recharts";
 
 const Loader = ({
   text = "",

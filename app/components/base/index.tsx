@@ -762,7 +762,7 @@ const Base = ({ children }: { children: JSX.Element[] | JSX.Element }) => {
                     />
 
                     <span className="msg-date text-[13px] min-w-fit ml-[3px]">
-                      {filelist?.toFixed(2)}/50Gb
+                      {filelist?.toFixed(2)}/2Gb
                     </span>
                   </div>
                 </div>
