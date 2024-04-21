@@ -1,9 +1,10 @@
-import { store, dir } from "../../types";
+import { store } from "../../types";
 import * as PushAPI from "@pushprotocol/restapi";
 import { ethers } from "ethers";
-import axios from "axios";
+import lighthouse from "@lighthouse-web3/sdk";
+import axios, { AxiosProgressEvent } from "axios";
 import { ENV } from "@pushprotocol/restapi/src/lib/constants";
-export let lq: any;
+import toast from "react-hot-toast";
 
 export const notifications = async ({
   title,
@@ -60,80 +61,82 @@ export const notifications = async ({
   }
 };
 
-export const beginStorageProvider = async ({
-  user,
-  contract,
-  randId,
-  participants,
-}: {
-  user: string;
-  contract: string;
-  randId: any;
-  participants: any;
-}) => {
 
-  lq = [randId, contract, participants, user];
+
+export const retrieveFiles = async (cid: string) => {
+
+  const { data } = await axios.get(
+    `https://gateway.lighthouse.storage/ipfs/${cid}`
+  );
+
+  return data;
 
 };
 
-export const retrieveFile = async (fileid: string) => {
+export const getLead = (id: number | string, data: any[]) => {
 
-  const token = `Bearer ${localStorage.getItem("token")}`;
-
-      const {
-        data: { file, key },
-      } = await axios.get(`/dao/${lq[0]}/files/${fileid}`, {
-        headers: { Authorization: token },
-      });
-
-      return { ...file, key };
+   return data.find((val, i) => {
+      if (val?.id) {
+        if (val.id == id) {
+          return val;
+        }
+      }else if (val?.uid) {
+        if (val.uid == id) {
+          return val;
+        }
+      }else if (id == i) {
+          return val;
+      }
+   });
 
 }
 
-export const retrieveFiles = async (folder?: string[]) => {
 
-  const token = `Bearer ${localStorage.getItem("token")}`;
+export const storeFiles = async (
+  file: File,
+  progressCallback: (ProgressEvent: AxiosProgressEvent) => number | void
+) => {
 
-  const {
-    data: { files },
-  } = await axios.get(`/dao/${lq[0]}/files`, {
-    headers: { Authorization: token },
-  });
+  const token = localStorage.getItem('token');
 
-  return files.main == undefined ? files : files.main;
+  const formData = new FormData();
 
-};
+  formData.append("file", file);
 
-
-/**
- * @param dirfolder: array - showing file directory till destination
- *
- * **/
-
-export const storeFiles = async (file: store[], dirfolder: string[]) => {
-
-  for (let i = 0; i < file.length; i++) {
-    
-    const { name, type, size, cid, extension, tag } = file[i];
-
-    await axios.post(
-      `/dao/${lq[0]}/files`,
-      {
-        name,
-        type,
-        size,
-        dir: dirfolder,
-        cid,
-        extension,
-        tag,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      }
-    );
+  if (file.type !== "text/csv") {
+    toast.error("Invalid file type");
+    return;
   }
 
-  return file;
+  const output = await axios.post(
+    "https://node.lighthouse.storage/api/v0/add",
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${process.env.NEXT_PUBLIC_LIGHTHOUSE || ""}`,
+      },
+      onUploadProgress: progressCallback,
+    }
+  );
+
+  const { data } = await axios.post('/fil/file/store', {
+    cid: output.data.Hash,
+    name: file.name,
+    size: (file.size / 1024).toFixed(2)
+  }, {
+    baseURL: process.env.NEXT_PUBLIC_APP_URL || "",
+    headers: { "Authorization": `Bearer ${token}` },
+  });
+
+  // console.log("File Status:", output.data);
+
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+  user.cids = data.lead_files;
+
+  localStorage.setItem("user", JSON.stringify(user));
+
+  return data.lead_files;
+
 };

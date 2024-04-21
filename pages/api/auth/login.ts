@@ -7,12 +7,15 @@ type Data = {
   message: string;
   error: boolean;
   user?: any;
+  token?: string;
+  latest?: any[];
 };
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
+
   if (req.method == "POST") {
 
       const { address, hash } = req.body;
@@ -32,14 +35,31 @@ export default async function handler(
         if (validateAddress == address) {
 
           const {
-            data,
+            data: { user, token },
           } = await axios.post("/fil/auth", { address }, {
             baseURL: process.env.NEXT_PUBLIC_APP_URL || "",
             headers: { "X-App-Key": process.env.NEXT_PUBLIC_APP_KEY || "" },
           });
 
-          // continue from here
-          
+          const cids = user.cids.reverse();
+
+          let leads: any[] = [];
+
+          if (cids.length) {
+              const { cid } = cids[0];
+
+            
+
+          }
+
+          res.status(200).json({
+            message: "Success",
+            error: false,
+            user: { ...user, cids },
+            token,
+            latest: leads
+          });
+
 
         } else {
           res.status(400).json({ error: true, message: "Invalid hash" });

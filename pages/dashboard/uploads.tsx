@@ -9,26 +9,16 @@ import { FaPlus} from "react-icons/fa";
 import { BsPlusLg } from "react-icons/bs";
 import { useContext, useState, useEffect, useRef } from "react";
 import FileDes from "@/app/components/designs/file";
+import { GenContext } from "@/app/components/extras/contexts/genContext";
 
 
 const Uploads = () => {
 
      const [isLoading, setLoading] = useState<boolean>(false)
 
-     const dirContent: any[] = [
-        {
-            name: "this is a test to know if this is working",
-            size: 100,
-            key: "fileid1",
-            extension: "csv",
-        },
-        ...Array.from({ length: 19 }, (_, i) => ({
-            name: `file${i + 2}`,
-            size: Math.floor(Math.random() * 100),
-            key: `fileid${i + 2}`,
-            extension: "csv",
-        })),
-     ];
+     const { fileList = [] } = useContext<any>(GenContext);
+
+     console.log(fileList, 'ss')
 
      const triggerUpload = async (
        w: React.SyntheticEvent & { target: HTMLInputElement }
@@ -68,22 +58,9 @@ const Uploads = () => {
             }}
             className="w-full flex items-start justify-between filedrop min-h-screen"
           >
-            <Button
-              onClick={() => {
-                const elem = document?.querySelector(
-                  ".input_upload"
-                ) as HTMLElement;
-
-                elem?.click();
-              }}
-              className="!py-2 !mr-4 !flex !fixed !right-[15px] !bottom-[20px] !cursor-pointer !justify-center !z-[90] !items-center !px-4 !bg-[#ff5555] !text-[#e2e2e2] !border-solid !border-[#e2e2e2] !border-[2px] !w-[64px] !h-[64px] !rounded-[50%] overflow-hidden hover:bg-[#d52323] font-[300]"
-            >
-              <BsPlusLg size={25} />
-            </Button>
 
             <input
               type="file"
-              multiple
               onChange={triggerUpload}
               className="!hidden input_upload"
               style={{
@@ -100,7 +77,7 @@ const Uploads = () => {
               </div>
               <div className="h-full">
                 <div>
-                  {!Boolean(dirContent.length) && !isLoading && (
+                  {!Boolean(fileList.length) && !isLoading && (
                     <div
                       className="empty"
                       style={{
@@ -123,17 +100,17 @@ const Uploads = () => {
                       </div>
 
                       <div className="mt-2 mb-3">
-                        <h2 className="text-[22px] text-center font-bold">
+                        {/* <h2 className="text-[22px] text-center font-bold">
                           Drop files here
-                        </h2>
+                        </h2> */}
                         <span className="mt-2 text-[17px] flex w-full text-center">
-                          or use the `{<FaPlus size={17} />}` button
+                          Use the `{<FaPlus size={17} />}` button on the sidebar to upload leads
                         </span>
                       </div>
                     </div>
                   )}
 
-                  {Boolean(dirContent.length) && (
+                  {Boolean(fileList.length) && (
                     <div
                       style={{
                         gridTemplateColumns:
@@ -141,37 +118,18 @@ const Uploads = () => {
                       }}
                       className="flist pt-7 grid gap-2 grid-flow-dense"
                     >
-                      {dirContent.map((e: any, i: number) => {
+                      {fileList.map((e: any, i: number) => {
                         return (
                           <FileDes
                             key={i}
                             data={{
                               name: e["name"],
-                              size: e["size"],
-                              key: e["fileid"],
+                              size: e["size"] * 1024,
+                              key: i + 1,
                             }}
-                            text={e["extension"]}
+                            text={'csv'}
                           />
                         );
-                        // } else {
-                        //   let size: number = 0;
-                        //   e.forEach((x: any) => {
-                        //     if (x.file) {
-                        //       size += x.size;
-                        //     }
-                        //   });
-                        //   return (
-                        //     <FolderDes
-                        //       key={i}
-                        //       data={{
-                        //         name: e["name"],
-                        //         size,
-                        //         key: i,
-                        //         files: e["files"].length,
-                        //       }}
-                        //     />
-                        //   );
-                        // }
                       })}
                     </div>
                   )}

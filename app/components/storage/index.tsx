@@ -19,12 +19,12 @@ import {
 import { useContext, useState, useEffect, useRef } from "react";
 import { GenContext } from "../../components/extras/contexts/genContext";
 import Loader from "../../components/loader";
+
 import {
-  lq,
-  beginStorageProvider,
   retrieveFiles,
   storeFiles,
 } from "../extras/storage/init";
+
 import { logout } from "../../components/extras/logout";
 import Dash from "../dash";
 import { useAccount } from "wagmi";
@@ -32,18 +32,14 @@ import io from 'socket.io-client';
 import TableComponent from "../../components/tableComponent";
 import useFormatDate from "../tableComponent/formatDate";
 import { faker } from "@faker-js/faker";
+import { AxiosProgressEvent } from "axios";
+import { store } from "../types";
 
-let socket:any;
+// let socket:any;
 
 const Storage = ({ loading: loadingModal }: { loading: boolean }) => {
 
-  const [currentDir, setCurrentDir] = useState<string[]>(["main"]);
-
   const [selectedLeads, setSelectedLeads] = useState<any[]>([]);
-
-  const loadOnce = useRef<boolean>(true);
-
-  const { address, isConnected } = useAccount();
 
   /* upload */
   const uploadData = useContext(GenContext);
@@ -64,23 +60,17 @@ const Storage = ({ loading: loadingModal }: { loading: boolean }) => {
     "#F1E4F1"
   ];
 
-  const dirContent =
-    uploadData.fileList !== undefined ? uploadData.fileList : [];
 
-  const { success, error, loading, updateSuccess, updateLoading, errUpdate } =
-    uploadData;
+  const { fileList, leads: lead } = uploadData;
 
   const triggerUpload = async (
     w: React.SyntheticEvent & { target: HTMLInputElement }
   ) => {
     if (w.target.files) {
-      await uploadFiles(w.target.files);
+      await uploadFiles(w.target.files[0]);
     }
   };
 
-  const [update, setUpdate] = useState<boolean>(false);
-
-  const [fileData, setFileData] = useState({});
   const [isLoading, setLoader] = useState(true);
 
   const { name, contract, data, participants } = loginData || {
@@ -90,79 +80,49 @@ const Storage = ({ loading: loadingModal }: { loading: boolean }) => {
     participants: {},
   };
 
-  const socketInit = async () => {
-    await fetch(`/api/storage?lq=${data}`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    });
+  // const socketInit = async () => {
+  //   await fetch(`/api/storage?lq=${data}`, {
+  //     headers: {
+  //       Authorization: `Bearer ${localStorage.getItem("token")}`,
+  //     },
+  //   });
 
-    socket = io();
+    // socket = io();
 
-    socket.on("connect", () => {
-      socket.emit("join", name);
-    });
+    // socket.on("connect", () => {
+    //   socket.emit("join", name);
+    // });
+  
 
-    const updateFl = async (data: any) => {
+  // useEffect(() => {
+  //   if (loadOnce.current && data) {
+  //     loadOnce.current = false;
 
-      const dir: any = await retrieveFiles(currentDir);
-
-      setLoader(false);
-      setFileData(dir);
-
-      uploadData.updateFile?.(dir);
-
-      setUpdate(!update);
-    };
-
-    socket.on("add_fle", updateFl);
-  };
-
-  useEffect(() => {
-    if (loadOnce.current && data) {
-      loadOnce.current = false;
-
-      socketInit();
-    }
-  }, [data]);
+  //     socketInit();
+  //   }
+  // }, [data]);
 
   useEffect(() => {
     async function init() {
-      await beginStorageProvider({
-        user: address || "",
-        contract,
-        randId: data,
-        participants,
-      });
-
-      const dir: any = await retrieveFiles(currentDir);
-
+    
       setLoader(false);
-      setFileData(dir);
 
-      uploadData.updateFile?.(dir);
-
-      setUpdate(!update);
     }
 
     if (name !== undefined && Boolean(data)) {
       init();
     }
-  }, [data, currentDir, contract, name]);
+  }, [data, contract, name]);
 
-  const uploadFiles = async (files: FileList) => {
-    updateLoading(true);
+  const uploadFiles = async (file: File) => {
 
-    const blobFiles: File[] = Array.from(files);
-
-    // await uploadProvider(blobFiles, maxSize);
   };
 
   const dropHere = async (event: React.DragEvent<HTMLDivElement>) => {
     event.stopPropagation();
     event.preventDefault();
     const fileList = event.dataTransfer.files;
-    await uploadFiles(fileList);
+    await uploadFiles(fileList[0]);
   };
 
   const dragHere = (event: React.DragEvent<HTMLDivElement>) => {
@@ -196,15 +156,11 @@ const Storage = ({ loading: loadingModal }: { loading: boolean }) => {
       }
   }
 
-  const [lead, setLead] = useState<any[]>(faker.helpers.multiple(createRandomLead, {
-    count: 25  
-  }));
-
 
 
   let newLeads: any = {};
 
-  lead.forEach((aLead) => {
+  lead.forEach((aLead: any) => {
     if (newLeads[aLead.source]) {
       newLeads[aLead.source] += 1;
     } else {
@@ -236,14 +192,14 @@ const Storage = ({ loading: loadingModal }: { loading: boolean }) => {
     return hasFractionalPart ? Math.round(value * 10) / 10 : value;
   };
 
-  const filteredlead = lead.filter((item) => {
+  const filteredlead = lead.filter((item: any) => {
     return item.status === "Success";
   });
 
   const progressbarvalue = (filteredlead.length / lead.length) * 100;
 
   const filteredleadsuccess = lead.filter(
-    (item) => item.status === "Success"
+    (item: any) => item.status === "Success"
   );
 
   return (
@@ -422,7 +378,7 @@ const Storage = ({ loading: loadingModal }: { loading: boolean }) => {
               </div>
             </div>
 
-            <Button
+            {/* <Button
               onClick={() => {
                 const elem = document?.querySelector(
                   ".input_upload"
@@ -433,7 +389,7 @@ const Storage = ({ loading: loadingModal }: { loading: boolean }) => {
               className="!py-2 !mr-4 !flex !fixed !right-[15px] !bottom-[20px] !cursor-pointer !justify-center !z-[90] !items-center !px-4 !bg-[#ff5555] !text-[#e2e2e2] !border-solid !border-[#e2e2e2] !border-[2px] !w-[64px] !h-[64px] !rounded-[50%] overflow-hidden hover:bg-[#d52323] font-[300]"
             >
               <BsPlusLg size={25} />
-            </Button>
+            </Button> */}
 
             <input
               type="file"
@@ -500,7 +456,7 @@ const Storage = ({ loading: loadingModal }: { loading: boolean }) => {
                     >
                       <h1
                         onClick={() =>
-                          Router.push(`/dashboard/leads/${item.id}`)
+                          Router.push(`/dashboard/leads/${item.cid}/${item.id}`)
                         }
                       >
                         {item.firstname
@@ -558,7 +514,7 @@ const Storage = ({ loading: loadingModal }: { loading: boolean }) => {
                       className="underline"
                       style={{ color: "#262626" }}
                       onClick={() => {
-                        Router.push(`/dashboard/leads/${item.id}`);
+                        Router.push(`/dashboard/leads/${item.cid}/${item.id}`);
                       }}
                     >
                       View
@@ -573,8 +529,8 @@ const Storage = ({ loading: loadingModal }: { loading: boolean }) => {
                   new Date(b.created_at).getTime() -
                   new Date(a.created_at).getTime()
               )}
-              isLoading={loading}
-              error={error}
+              isLoading={false}
+              error={null}
               onSelectRow={(item: any) => false}
               hiddenFilters={["score"]}
               showSearchButton={false}

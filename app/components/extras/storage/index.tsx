@@ -1,8 +1,8 @@
 import axios from 'axios';
-import { dir, fstructure, store } from '../../types';
+import { store } from '../../types';
 
 
-export const updateSearch = (files: (store | dir)[], newFiles: store[], fileFolder: string[],update: boolean = true, num: number = 1) => {
+export const updateSearch = (files: any[], newFiles: store[], fileFolder: string[],update: boolean = true, num: number = 1) => {
     if (fileFolder.length > 1) {
     files.forEach((data: any) => {
         if(data['files'] !== undefined){
@@ -29,7 +29,7 @@ export const updateSearch = (files: (store | dir)[], newFiles: store[], fileFold
             files.push(xx)
 
           }else{
-            files.forEach((e:(dir | store), ix:number) => {
+            files.forEach((e: any, ix:number) => {
                 if(e.name == xx.name){
                     files[ix] = xx;
                 }
@@ -49,7 +49,7 @@ export const toDataUrl = (blob: Blob) => {
 }
 
 
-export const initData: fstructure = {
+export const initData: any = {
   name: "main",
   tag: "default",
   files: [],
@@ -57,7 +57,7 @@ export const initData: fstructure = {
   file: false,
 };
 
-export const getFileList = (files: (store | dir)[], dirFolder: string[], num:number = 0) => {
+export const getFileList = (files: any[], dirFolder: string[], num:number = 0) => {
 
     files.forEach((file: any) => {
       if (file["files"] !== undefined) {

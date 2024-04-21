@@ -1,65 +1,67 @@
-import { createContext, useState } from "react";
-import { store, dir } from "../../types";
-
-interface Upload {
-  error?: {
-    status: string;
-    update: (err: string) => void;
-  };
-  success?: {
-    status: boolean;
-    update: (err: boolean) => void;
-  };
-  loading?: {
-    status: number;
-    update: (err: number) => void;
-  };
-}
-
-
-interface Files { 
-    fileList?: (dir | store)[]
-    update?: (files: (dir | store)[]) => void,
-    directory?: {
-        value: boolean,
-        update: (state: boolean) => void
-    }
-}
-
-export interface gCon{
-        upload: Upload,
-        files: Files
-}
+import { createContext, useEffect, useState } from "react";
+import { store } from "../../types";
+import { retrieveFiles } from "../storage/init";
+import axios from "axios";
 
 export const GenContext = createContext<any>({
-    upload: {},
-    files: {},
+    fileList: [],
+    leads: [],
 });
 
+export const GenProvider = ({children}: {children: JSX.Element | JSX.Element[]}) => {
 
-export const GenProvider = ({children}: {children: JSX.Element}) => {
+    const [dirFiles, updateFiles] = useState<store[]>([]);
 
-    const [uploadError, updateError] = useState<string>('');
-    const [ndirectory, updateDirectory] = useState<boolean>(false)
-    const [isUploading, updateUploading] = useState<boolean>(false);
+    const [leads, setLeads] = useState<any[]>([]);
 
-    const [uploadSuccess, updateUploadSuccess] = useState<boolean>(false);
+    useEffect(() => {
+      const user = localStorage.getItem("user");
 
-    const [dirFiles, updateFiles] = useState<(dir | store)[]>([]);
+      if (user) {
+        const data = JSON.parse(user);
+
+        if (data) {
+          updateFiles(data.cids.map((e: store) => ({...e, size: Number(e.size)})));
+        }
+
+      }
+    }, []);
+
+    useEffect(() => {
+        if (dirFiles.length) {
+            dirFiles.map((data: store) => {
+                const cid = data.cid;
+
+                (async () => {
+                  
+                   try {
+
+                    if (leads.find((val) => val.cid == cid)) {
+                        return;
+                    }
+
+                    const { data } = await axios.get('/api/files/' + cid);
+
+                    setLeads((prev: store[]) => {
+                        return prev.find((val) => val.cid == cid) ? prev : [...prev, ...data.leads];
+                    });
+
+                   } catch (error) {
+                       console.log(error);
+                   }
+
+                })();
+            })
+        }
+    }, [dirFiles])
 
     return (
       <GenContext.Provider
         value={{
-          errUpdate: (err: string) => updateError(err),
-          error: uploadError,
-          updateSuccess: (state: boolean) => updateUploadSuccess(state),
-          success: uploadSuccess,
-          loading: isUploading,
-          updateLoading: (state: boolean) => updateUploading(state),
-          dirValue: ndirectory,
-          updateDir: (state: boolean) => updateDirectory(state),
           fileList: dirFiles,
-          updateFile: (files: (dir | store)[]) => updateFiles(files),
+          updateFile: (files: store[]) => updateFiles(files),
+          addFiles: (file: store) => updateFiles((prev) => [...prev, file]),
+          leads,
         }}
       >
         {children}

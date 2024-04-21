@@ -1,47 +1,17 @@
 import Base from "@/app/components/base";
 import Head from "next/head";
 import { faker } from "@faker-js/faker"
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { FaTrash } from "react-icons/fa";
 import Router from "next/router";
 import useFormatDate from "@/app/components/tableComponent/formatDate";
 import TableComponent from "@/app/components/tableComponent";
+import { GenContext } from "@/app/components/extras/contexts/genContext";
 
 const Leads = () => {
 
-    const createRandomLead = () => {
-      return {
-        id: faker.number.int(),
-        username: faker.internet.userName(),
-        firstname: faker.person.firstName(),
-        lastname: faker.person.lastName(),
-        status: faker.helpers.arrayElement([
-          "Pending",
-          "Ongoing",
-          "Failed",
-          "Success",
-        ]),
-        destination: faker.location.country(),
-        source: faker.helpers.arrayElement([
-          "Referrals",
-          "Others",
-          "Manual entry",
-        ]),
-        location: faker.location.city(),
-        address: faker.finance.ethereumAddress(),
-        phone: faker.phone.number(),
-        created_at: faker.date.recent(),
-        updated_at: faker.date.recent(),
-        month: faker.date.month(),
-        timeline: faker.number.int(),
-      };
-    };
+    const { leads = [] } = useContext(GenContext)
 
-    const [lead, setLead] = useState<any[]>(
-      faker.helpers.multiple(createRandomLead, {
-        count: 25,
-      })
-    );
 
     const [error, setError] = useState<string | null>(null);
 
@@ -51,6 +21,7 @@ const Leads = () => {
 
     }
 
+  
     const [selectedLeads, setSelectedLeads] = useState<any[]>([]);
 
     const formatDate = useFormatDate();
@@ -123,7 +94,7 @@ const Leads = () => {
                     >
                       <h1
                         onClick={() =>
-                          Router.push(`/dashboard/leads/${item.id}`)
+                          Router.push(`/dashboard/leads/${item.cid}/${item.id}`)
                         }
                       >
                         {item.firstname
@@ -181,7 +152,7 @@ const Leads = () => {
                       className="underline"
                       style={{ color: "#262626" }}
                       onClick={() => {
-                        Router.push(`/dashboard/leads/${item.id}`);
+                        Router.push(`/dashboard/leads/${item.cid}/${item.id}`);
                       }}
                     >
                       View
@@ -191,7 +162,7 @@ const Leads = () => {
                 },
                 // ... add other columns as needed
               ]}
-              data={lead.sort(
+              data={leads.sort(
                 (a: any, b: any) =>
                   new Date(b.created_at).getTime() -
                   new Date(a.created_at).getTime()
@@ -203,7 +174,7 @@ const Leads = () => {
               showSearchButton={false}
               style={{}}
               multiSelect={true}
-              pagination={false}
+              pagination={true}
               onSelectionChange={(selected: any) => setSelectedLeads(selected)}
               actionButtons={
                 selectedLeads.length > 0

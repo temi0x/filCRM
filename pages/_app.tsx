@@ -19,6 +19,7 @@ import {
 } from "wagmi/chains";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { Toaster } from "react-hot-toast";
+import { GenProvider } from "@/app/components/extras/contexts/genContext";
 const queryClient = new QueryClient();
 
 const config = getDefaultConfig({
@@ -42,8 +43,10 @@ export default function App({ Component, pageProps }: AppProps) {
             accentColor: "#ff5555",
           })}
         >
+          <GenProvider>
           <Toaster />
           <Component {...pageProps} />
+          </GenProvider>
         </RainbowKitProvider>
       </QueryClientProvider>
     </WagmiProvider>

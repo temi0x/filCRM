@@ -32,8 +32,7 @@ const FileDes = ({
     <Tooltip title={name} arrow>
       <Link
         className="flex file m-auto flex-col w-[150px] h-[160px] pb-2 pt-4 px-2 justify-between items-center cursor-pointer border-[1px] border-solid border-transparent hover:bg-[#8b8b8b24] hover:border-[#e1e1e1] transition-all relative"
-        target="_blank"
-        href={`/file/${key}`}
+        href={`/dashboard/files/${key}`}
       >
         <div className="absolute right-[30px] flex items-center top-[7px]">
           {pinned && (

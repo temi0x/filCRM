@@ -1,7 +1,6 @@
 import { BsPeople, BsPinAngle } from "react-icons/bs";
 import { getSize } from "../extras/folder";
 import { useContext } from "react";
-import { store, dir } from "../types";
 import { GenContext } from "../extras/contexts/genContext";
 
 const FolderDes = ({ color = "#40A9FF", data, pinned = false, shared = false }: { color?: string, data: {

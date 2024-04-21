@@ -1,4 +1,5 @@
 import axios from 'axios';
+import toast from 'react-hot-toast';
 
 export const logout = async () => {
 
@@ -13,13 +14,15 @@ export const logout = async () => {
             }
         });
 
+        toast("Logged out successfully")
+
     }catch (err) {
         // do something
     }
 
-    localStorage.removeItem("cloverlog");
+    localStorage.removeItem("token");
 
-    localStorage.removeItem("clover-x");
+    localStorage.removeItem("user");
 
     window.location.href = '/';
     

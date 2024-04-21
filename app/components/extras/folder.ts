@@ -11,11 +11,10 @@ export const getSize = (size: number) => {
           return format(size, 1073741820, "Gb");
     else if(size > 1048576)
           return format(size, 1048576, 'Mb');
-    else if(size > 1024)
-          return format(size, 1024, 'Kb');
     else if (size > 0) 
-          return format(size, 1, 'B');
-  }
+          return format(size, 1024, 'Kb');
+  
+}
 
 
 

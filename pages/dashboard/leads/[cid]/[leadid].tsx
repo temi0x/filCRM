@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { faker } from '@faker-js/faker';
 import Base from '@/app/components/base';
 import DisplayAvatar from '@/app/components/avatar';
@@ -13,56 +13,32 @@ import validator from 'validator'
 import { FaRegCopy } from 'react-icons/fa';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import toast from 'react-hot-toast';
+import { getLead } from '@/app/components/extras/storage/init';
+import { GenContext } from '@/app/components/extras/contexts/genContext';
 
 const ViewLead = () => {
     
     const router = useRouter();
     
-    const { leadid } = router.query  
+    const { leadid, cid } = router.query  
 
-    const createRandomLead = () => {
+    const { leads } = useContext(GenContext);
     
-        return {
-        id: faker.number.int(),
-        username: faker.internet.userName(),
-        firstname: faker.person.firstName(),
-        lastname: faker.person.lastName(),
-        status: faker.helpers.arrayElement([
-          "Pending",
-          "Ongoing",
-          "Failed",
-          "Success",
-        ]),
-        destination: faker.location.country(),
-        source: faker.helpers.arrayElement([
-          "Referrals",
-          "Others",
-          "Manual entry",
-        ]),
-        location: faker.location.city(),
-        address: faker.finance.ethereumAddress(),
-        phone: faker.phone.number(),
-        created_at: faker.date.recent(),
-        updated_at: faker.date.recent(),
-        month: faker.date.month(),
-        timeline: faker.number.int(),
-      };
-    };
-    
-    const [leads, setLeads] = useState<any[]>(
-      faker.helpers.multiple(createRandomLead, {
-        count: 25,
-      })
-    );
-    
+    const [leadStatus, setLeadStatus] = useState<string>("");
 
-    const selectedLead = leads[0];
+    const selectedLead = getLead(leadid as string, leads.filter((e: any) => e.cid == cid));
+
+    if (!selectedLead) {
+        return <Base>
+            <div className="flex justify-center items-center h-screen">
+                <h2 className="text-[#222] font-bold text-center text-[20px]">Lead not found</h2>
+            </div>
+        </Base>
+    }
 
     if (!selectedLead?.status) {
         selectedLead.status = "Pending";
     }
-
-    const [leadStatus, setLeadStatus] = useState<string>('');
 
     const formatAddr = (addr?: string) => {
           if (!addr) return "";
