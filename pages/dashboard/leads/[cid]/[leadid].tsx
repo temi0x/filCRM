@@ -156,7 +156,7 @@ const ViewLead = () => {
                 />
 
                 <button
-                  className={`w-full py-3 transition-all text-center bg-[#222] font-bold text-[16px] ${styles.complete} justify-center flex items-center text-white`}
+                  className={`w-full py-3 transition-all text-center bg-[#222] font-bold text-[16px] justify-center flex items-center text-white`}
                 >
                   Negotiating
                 </button>
